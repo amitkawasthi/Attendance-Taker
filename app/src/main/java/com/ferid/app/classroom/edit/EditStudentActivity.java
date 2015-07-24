@@ -184,14 +184,14 @@ public class EditStudentActivity extends AppCompatActivity {
       //  Toast.makeText(getApplicationContext(), file.toString(), Toast.LENGTH_LONG).show();
         try {
             CSVReader reader = new CSVReader(new FileReader(file));
-            String [] nextLine;
+            String [] row;
             try {
-                while ((nextLine = reader.readNext()) != null) {
+                while ((row = reader.readNext()) != null) {
 
                     // nextLine[] is an array of values from the line
 
-                    String sname=nextLine[0];
-                    //String lname=nextLine[1];
+                    String rollno=row[0];
+                    String sname=row[1];
                     //String address=nextLine[2];
                     //String email=nextLine[3];
 
@@ -202,7 +202,7 @@ public class EditStudentActivity extends AppCompatActivity {
                     else
                     {
                         //Toast.makeText(getApplicationContext(), "Inserting", Toast.LENGTH_LONG).show();
-                        new InsertStudent().execute(sname);
+                        new InsertStudent().execute(rollno, sname);
                         //if(value==1)
                         //{
 
@@ -237,7 +237,7 @@ public class EditStudentActivity extends AppCompatActivity {
                 closeKeyboard();
 
                 if (!promptText.toString().equals(""))
-                    new InsertStudent().execute(promptText);
+                    new InsertStudent().execute("",promptText);
             }
         });
         promptDialog.show();
@@ -278,11 +278,11 @@ public class EditStudentActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(String... params) {
             boolean isSuccessful = false;
-
-            String student = params[0];
+            String rollno = params[0];
+            String student = params[1];
             if (classroom != null) {
                 DatabaseManager databaseManager = new DatabaseManager(context);
-                isSuccessful = databaseManager.insertStudent(classroom.getId(), student);
+                isSuccessful = databaseManager.insertStudent(classroom.getId(),rollno, student);
             }
 
             return isSuccessful;

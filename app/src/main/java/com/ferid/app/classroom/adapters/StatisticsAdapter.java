@@ -54,7 +54,7 @@ public class StatisticsAdapter extends ArrayAdapter<Attendance> {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             convertView = inflater.inflate(layoutResId, parent, false);
             viewHolder = new ViewHolder();
-
+            viewHolder.keyroll = (TextView) convertView.findViewById(R.id.keyroll);
             viewHolder.key = (TextView) convertView.findViewById(R.id.key);
             viewHolder.value = (TextView) convertView.findViewById(R.id.value);
             viewHolder.valueView = convertView.findViewById(R.id.valueView);
@@ -65,7 +65,7 @@ public class StatisticsAdapter extends ArrayAdapter<Attendance> {
         }
 
         final Attendance item = items.get(position);
-
+        viewHolder.keyroll.setText(item.getRollNo());
         viewHolder.key.setText(item.getStudentName());
         viewHolder.value.setText(String.valueOf(item.getPresencePercentage()) + "%");
 
@@ -77,6 +77,7 @@ public class StatisticsAdapter extends ArrayAdapter<Attendance> {
     }
 
     public class ViewHolder {
+        TextView keyroll;
         TextView key;
         TextView value;
         View valueView;

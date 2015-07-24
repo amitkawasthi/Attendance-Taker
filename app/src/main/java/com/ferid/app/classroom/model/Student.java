@@ -23,6 +23,7 @@ import java.io.Serializable;
  */
 public class Student implements Serializable {
     private int id;
+    private String rollno;
     private String name;
     private boolean isPresent;
     private int classroomStudentId;
@@ -31,6 +32,7 @@ public class Student implements Serializable {
 
     public Student() {
         id = 0;
+        rollno = "";
         name = "";
         isPresent = false;
         classroomStudentId = 0;
@@ -38,8 +40,29 @@ public class Student implements Serializable {
         attendanceId = 0;
     }
 
-    public Student(String name) {
+    /*public Student(String name) {
         id = 0;
+        this.rollno = "";
+        this.name = name;
+        isPresent = false;
+        classroomStudentId = 0;
+        dateTime = "";
+        attendanceId = 0;
+    }
+
+    public Student(String rollno) {
+        id = 0;
+        this.rollno = rollno;
+        this.name = "";
+        isPresent = false;
+        classroomStudentId = 0;
+        dateTime = "";
+        attendanceId = 0;
+    }
+*/
+    public Student(String rollno,String name) {
+        id = 0;
+        this.rollno = rollno;
         this.name = name;
         isPresent = false;
         classroomStudentId = 0;
@@ -50,9 +73,15 @@ public class Student implements Serializable {
     public String getName() {
         return name;
     }
+    public String getRollNo() {
+        return rollno;
+    }
 
     public void setName(String name) {
         this.name = name;
+    }
+    public void setRollNo(String rollno) {
+        this.rollno = rollno;
     }
 
     public int getId() {

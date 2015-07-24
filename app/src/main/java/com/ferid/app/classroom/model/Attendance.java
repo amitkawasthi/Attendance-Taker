@@ -27,6 +27,7 @@ public class Attendance implements Serializable {
     private String dateTime;
     private String classroomName;
     private String studentName;
+    private String rollNo;
     private int classroomId;
     private int studentId;
     private int presencePercentage;
@@ -72,6 +73,14 @@ public class Attendance implements Serializable {
 
     public void setClassroomName(String classroomName) {
         this.classroomName = classroomName;
+    }
+
+    public String getRollNo() {
+        return rollNo;
+    }
+
+    public void setRollNo(String rollno) {
+        this.rollNo = rollno;
     }
 
     public String getStudentName() {

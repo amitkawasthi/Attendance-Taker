@@ -39,12 +39,13 @@ import java.util.Date;
 public class DatabaseManager extends SQLiteOpenHelper {
     //The Android's default_flag system path of your application database.
     private static final String DB_NAME = "ClassroomManager";
-    private static final int VERSION = 1;
+    private static final int VERSION = 3;
 
     private static final String CREATE_TABLE_STUDENT = "CREATE TABLE `Student` (\n" +
             "\t`id`\tINTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+            "\t`rollno`\tTEXT,\n" +
             "\t`name`\tTEXT\n" +
-            ");";
+                        ");";
 
     private static final String CREATE_TABLE_CLASSROOM = "CREATE TABLE `Classroom` (\n" +
             "\t`id`\tINTEGER PRIMARY KEY AUTOINCREMENT,\n" +
@@ -245,7 +246,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         String classroom_id = String.valueOf(classroomId);
         ArrayList<Student> list = new ArrayList<Student>();
 
-        String query = "SELECT student.id, student.name, classroomstudent.id FROM student " +
+        String query = "SELECT student.id, student.rollno,student.name, classroomstudent.id FROM student " +
                 "INNER JOIN classroomstudent " +
                 "ON student.id = classroomstudent.student_id " +
                 "WHERE classroomstudent.classroom_id = ?";
@@ -255,9 +256,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
             do {
                 Student student = new Student();
                 student.setId(cursor.getInt(0));
-                student.setName(cursor.getString(1));
-                student.setClassroomStudentId(cursor.getInt(2));
-
+                student.setRollNo(cursor.getString(1));
+                student.setName(cursor.getString(2));
+                student.setClassroomStudentId(cursor.getInt(3));
                 list.add(student);
             } while (cursor.moveToNext());
         }
@@ -273,11 +274,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
      * @param classroomId
      * @param name
      */
-    public boolean insertStudent(int classroomId, String name) {
+    public boolean insertStudent(int classroomId, String rollno, String name) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put("name", name);
+        values.put("rollno", rollno);
         boolean isSuccessful = db.insert("student", null, values) > 0;
 
         db.close();

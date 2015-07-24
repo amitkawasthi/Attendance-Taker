@@ -55,6 +55,7 @@ public class AttendanceAdapter extends ArrayAdapter<Student> {
             convertView = inflater.inflate(layoutResId, parent, false);
             viewHolder = new ViewHolder();
 
+            viewHolder.rtext = (TextView) convertView.findViewById(R.id.rtext);
             viewHolder.text = (TextView) convertView.findViewById(R.id.text);
             viewHolder.checkBox = (ImageView) convertView.findViewById(R.id.checkBox);
 
@@ -64,7 +65,7 @@ public class AttendanceAdapter extends ArrayAdapter<Student> {
         }
 
         final Student item = items.get(position);
-
+        viewHolder.rtext.setText(item.getRollNo());
         viewHolder.text.setText(item.getName());
         if (item.isPresent()) {
             viewHolder.checkBox.setImageResource(R.drawable.abc_btn_check_to_on_mtrl_015);
@@ -78,6 +79,7 @@ public class AttendanceAdapter extends ArrayAdapter<Student> {
     }
 
     public class ViewHolder {
+        TextView rtext;
         TextView text;
         ImageView checkBox;
     }

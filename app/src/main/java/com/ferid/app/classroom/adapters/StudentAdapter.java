@@ -55,6 +55,7 @@ public class StudentAdapter extends ArrayAdapter<Student> {
             viewHolder = new ViewHolder();
 
             viewHolder.counter = (TextView) convertView.findViewById(R.id.counter);
+            viewHolder.rtext = (TextView) convertView.findViewById(R.id.rtext);
             viewHolder.text = (TextView) convertView.findViewById(R.id.text);
 
             convertView.setTag(viewHolder);
@@ -63,15 +64,16 @@ public class StudentAdapter extends ArrayAdapter<Student> {
         }
 
         final Student item = items.get(position);
-
         viewHolder.counter.setText(String.valueOf(position+1));
         viewHolder.text.setText(item.getName());
+        viewHolder.rtext.setText(item.getRollNo());
 
         return convertView;
     }
 
     public class ViewHolder {
         TextView counter;
+        TextView rtext;
         TextView text;
     }
 }

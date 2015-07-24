@@ -17,10 +17,17 @@
         android:fontFamily="@string/fontFamilyCondensed"/>
 
     <TextView
-        android:id="@+id/text"
+        android:id="@+id/rtext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/counter"
+        style="@style/TextView"/>
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/rtext"
         style="@style/TextView"/>
 
 </RelativeLayout>
