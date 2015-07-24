@@ -19,16 +19,19 @@ package com.ferid.app.classroom.edit;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -42,10 +45,18 @@ import com.ferid.app.classroom.material_dialog.PromptDialog;
 import com.ferid.app.classroom.model.Classroom;
 import com.ferid.app.classroom.model.Student;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
+
+import au.com.bytecode.opencsv.CSVReader;
 
 /**
  * Created by ferid.cafer on 4/15/2015.
+ * Updated by DR AMIT K AWASTHI on 4/15/2015.
  */
 public class EditStudentActivity extends AppCompatActivity {
     private Context context;
@@ -156,9 +167,60 @@ public class EditStudentActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 addNewItem();
+                //importStudents();
             }
         });
     }
+
+    private void importStudents()
+    {
+       // Toast.makeText(getApplicationContext(), "Inserting", Toast.LENGTH_LONG).show();
+        File exportDir = new File(Environment.getExternalStorageDirectory(), "Documents");
+        if (!exportDir.exists()) {
+            exportDir.mkdirs();
+        }
+       // Toast.makeText(getApplicationContext(), exportDir.toString(), Toast.LENGTH_LONG).show();
+        File file = new File(exportDir, "Students.csv");
+      //  Toast.makeText(getApplicationContext(), file.toString(), Toast.LENGTH_LONG).show();
+        try {
+            CSVReader reader = new CSVReader(new FileReader(file));
+            String [] nextLine;
+            try {
+                while ((nextLine = reader.readNext()) != null) {
+
+                    // nextLine[] is an array of values from the line
+
+                    String sname=nextLine[0];
+                    //String lname=nextLine[1];
+                    //String address=nextLine[2];
+                    //String email=nextLine[3];
+
+                    if(sname.equalsIgnoreCase("Roll No"))
+                    {
+                        Toast.makeText(getApplicationContext(), "Duplicate! Ignored.", Toast.LENGTH_LONG).show();
+                    }
+                    else
+                    {
+                        //Toast.makeText(getApplicationContext(), "Inserting", Toast.LENGTH_LONG).show();
+                        new InsertStudent().execute(sname);
+                        //if(value==1)
+                        //{
+
+                        //}
+                    }
+
+                }
+                Toast.makeText(getApplicationContext(), "Data inerted into table", Toast.LENGTH_LONG).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     /**
      * Add new student item
@@ -281,8 +343,20 @@ public class EditStudentActivity extends AppCompatActivity {
             case android.R.id.home:
                 closeWindow();
                 return true;
+            case R.id.action_import_students:
+                importStudents();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_add_students, menu);
+        return true;
+    }
+
+
 }

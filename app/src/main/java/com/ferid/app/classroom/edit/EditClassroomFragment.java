@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -33,6 +34,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ferid.app.classroom.R;
 import com.ferid.app.classroom.adapters.ClassroomAdapter;
@@ -43,12 +45,24 @@ import com.ferid.app.classroom.material_dialog.CustomAlertDialog;
 import com.ferid.app.classroom.material_dialog.PromptDialog;
 import com.ferid.app.classroom.model.Classroom;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+
+import au.com.bytecode.opencsv.CSVReader;
 
 /**
  * Created by ferid.cafer on 4/15/2015.
+ * Updated by DR AMIT K AWASTHI on 4/15/2015.
  */
 public class EditClassroomFragment extends Fragment {
+    private static final String SAMPLE_DB_NAME ="rollcall.db" ;
     private Context context;
 
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -267,6 +281,107 @@ public class EditClassroomFragment extends Fragment {
         inflater.inflate(R.menu.menu_add, menu);
     }
 
+    private void exportDB() {
+
+
+        FileInputStream fis = null;
+        try {
+            File file = context.getDatabasePath("ClassroomManager");
+            fis = new FileInputStream(file);
+            String outputDB = Environment.getExternalStorageDirectory() + "/Download/rollcall";
+            OutputStream os = new FileOutputStream(outputDB);
+
+// Transfer bytes from the inputfile to the outputfile
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = fis.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+// Close the streams
+            os.flush();
+            os.close();
+            fis.close();
+            Toast.makeText(this.context, outputDB.toString(), Toast.LENGTH_LONG).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void importDB() {
+
+
+        FileInputStream fis = null;
+        try {
+            File file = context.getDatabasePath("ClassroomManager");
+            String outputDB = Environment.getExternalStorageDirectory() + "/Download/rollcall";
+            fis = new FileInputStream(outputDB);
+            OutputStream os = new FileOutputStream(file);
+
+// Transfer bytes from the inputfile to the outputfile
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = fis.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+// Close the streams
+            os.flush();
+            os.close();
+            fis.close();
+            Toast.makeText(this.context, file.toString(), Toast.LENGTH_LONG).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+ //       File sd = Environment.getExternalStorageDirectory();
+ //       File data = Environment.getDataDirectory();
+ //       FileChannel source=null;
+ //       FileChannel destination=null;
+ //       String currentDBPath = "/data/"+ "com.your.package" +"/databases/ClassroomManager";
+//        String backupDBPath = SAMPLE_DB_NAME;
+//        File currentDB = new File(data, currentDBPath);
+//        File backupDB = new File(sd, backupDBPath);
+//        try {
+//            source = new FileInputStream(currentDB).getChannel();
+//            destination = new FileOutputStream(backupDB).getChannel();
+//            destination.transferFrom(source, 0, source.size());
+/*            source.close();
+            destination.close();
+            Toast.makeText(this.context, backupDB.toString(), Toast.LENGTH_LONG).show();
+        } catch(IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this.context, backupDB.toString(), Toast.LENGTH_LONG).show();
+        }
+
+*/
+
+
+
+      //  try {
+    //        File sd = Environment.getExternalStorageDirectory();
+  //          File data = Environment.getDataDirectory();
+//
+          //  if (sd.canWrite()) {
+        //        String currentDBPath = "//data//"+ packageName +"//databases//"+dbList[0];
+      //          String backupDBPath = dbList[0];
+    //            File currentDB = new File(data, currentDBPath);
+  //              File backupDB = new File(sd, backupDBPath);
+//
+         //       FileChannel src = new FileInputStream(currentDB).getChannel();
+        //        FileChannel dst = new FileOutputStream(backupDB).getChannel();
+        //        dst.transferFrom(src, 0, src.size());
+        //        src.close();
+        //        dst.close();
+        //        Toast.makeText(getBaseContext(), backupDB.toString(), Toast.LENGTH_LONG).show();
+        //    }
+        //} catch (Exception e) {
+        //    Toast.makeText(getBaseContext(), e.toString(), Toast.LENGTH_LONG).show();
+        //}
+
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -275,6 +390,12 @@ public class EditClassroomFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.add:
                 addNewItem();
+                return true;
+            case R.id.action_backup:
+                exportDB();
+                return true;
+            case R.id.action_restore:
+                importDB();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
